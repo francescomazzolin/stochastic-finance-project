@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
@@ -9,8 +8,7 @@ data = get_financial_data(['AAPL.O','META.O'])
 sigma = volatility_estimator(['AAPL.O','META.O'], start_date=None, end_date=None)
 combined_df = pd.concat([data,sigma],axis=1)
 combined_df.drop(columns=['RIC'], inplace=True)
-print(combined_df)
-#%%
+
 
 """
 V = Total company value
