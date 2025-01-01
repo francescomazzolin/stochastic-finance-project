@@ -6,15 +6,16 @@ from IPython.display import display
 from data_retrieve import get_financial_data
 from data_retrieve import volatility_estimator
 from monte_carlo_defaults import monte_carlo_merton
-from analytical_functions import merton_debt,merton_equity,risk_neutral_default_probability
+from analytical_functions import merton_debt,merton_equity,risk_neutral_default_probability, credit_spread_model
 
 '''
 IMPORTING THE DATA
 '''
-data = get_financial_data(['AAPL.O','META.O'])
-sigma = volatility_estimator(['AAPL.O','META.O'], start_date=None, end_date=None)
+rics = ['AAPL.O','META.O','AMZN.O','TSLA.O','GOOGL.O','NVDA.O']
+data = get_financial_data(rics)
+sigma = volatility_estimator(rics, start_date=None, end_date=None)
 combined_df = pd.concat([data,sigma],axis=1)
-combined_df.drop(columns=['RIC'],inplace=True)
+#combined_df.drop(columns=['RIC'],inplace=True)
 
 '''
 INPUT FROM EXTERNAL RESOURCES
@@ -35,11 +36,12 @@ combined_df['Default_Probability'] = combined_df.apply(lambda row: risk_neutral_
 MONTE CARLO RESULTS
 '''
 combined_df[['MC_Equity','MC_Dect','MC_Prob']] = combined_df.apply(lambda row: pd.Series(monte_carlo_merton(row['Total_value'], row['Debt - Total'],r,row['Volatility'],T,M)), axis=1)
-
+'''
+CREDIT SPREAD COMPUTATION
+'''
+combined_df['Credit_Spread'] = combined_df.apply(lambda row: credit_spread_model(row['Total_value'], row['Debt - Total'],row['Volatility'],r,T,t), axis=1)
 '''
 FINAL RESULTS
 '''
 combined_df
-
-
 
