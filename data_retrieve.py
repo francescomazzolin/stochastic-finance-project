@@ -3,7 +3,12 @@ import eikon as ek
 import pandas as pd
 import numpy as np
 # Set API Key
-ek.set_app_key('86872e92eb6d46a0a1b182488b3c6bff38c6b468')
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("EIKON_API_KEY")
+ek.set_app_key(api_key)
 
 
 # Function to retrieve data
