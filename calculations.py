@@ -50,18 +50,21 @@ def merton_debt(V,K,r,sigma,T,t):
     
     return Bt
 #Inputs
-r = 0.04   # Risk-free rate (10%)
-#sigma = 0.2    # Asset volatility (10%)
+r = 0.04       # Risk-free rate USA 
 T = 1          # Maturity time (1 year)
 t = 0          # Current time (0 years)
 
-
+'''
+CALCOLO EQUITY AND DEBT
+'''
 combined_df['Equity'] = combined_df.apply(lambda row: merton_equity(row['Total_value'], row['Debt - Total'], r, row['Volatility'], T, t), axis=1)
 combined_df['Debt'] = combined_df.apply(lambda row: merton_debt(row['Total_value'], row['Debt - Total'], r,  row['Volatility'], T, t), axis=1)
 
-# Display the DataFrame
 print(combined_df)
 
+'''
+CALCOLO PROBABILITY OF DEFAULT
+'''
 def risk_neutral_default_probability(V, B, r, sigma, T, t):
     d2 = (np.log(V / B) + (r - 0.5 * sigma**2) * (T - t)) / (sigma * np.sqrt(T - t))
     return norm.cdf(-d2)
