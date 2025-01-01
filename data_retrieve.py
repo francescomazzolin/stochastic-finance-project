@@ -22,12 +22,13 @@ def get_financial_data(rics):
 
     # Combine results into a single DataFrame
     df = pd.concat(results, ignore_index=True)
-    df.drop(columns=['RIC'])
+    
 
     # Add Total Value column
     df['Total_value'] = df['Common Equity - Total'] + df['Debt - Total']
-
+    df.drop(columns=['RIC'],inplace=True)
     return df
+get_financial_data(['AAPL.O', 'META.O'])
 #%%
 
 def volatility_estimator(rics, start_date=None, end_date=None):
@@ -63,13 +64,13 @@ def volatility_estimator(rics, start_date=None, end_date=None):
                 print(f"No data retrieved for {ric}.")
         except Exception as e:
             print(f"Error retrieving data for {ric}: {e}")
+    data = pd.DataFrame(results)
+   
+    data.drop(columns=['RIC'], inplace=True)
+    
     
     # Return results as a DataFrame
-    return pd.DataFrame(results)
-
-# Example usage
-volatility = volatility_estimator(['AAPL.O', 'META.O'], start_date=None, end_date=None)
-print(volatility)
+    return data
 
 
 
