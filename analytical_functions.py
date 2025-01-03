@@ -137,19 +137,35 @@ def credit_spread_model(V, K, sigma, r, T, t):
 
     return credit_spread
 
-def monte_carlo_merton(V_0, K, r, sigma, T, M):
-    
-    W_T = np.random.randn(M)*np.sqrt(T)
-    V_T = V_0 * np.exp((r - 0.5 * sigma**2) * T + sigma * W_T)
+# def monte_carlo_merton(V, K, r, sigma, T, M):
+#     np.random.seed(42)
+#     W_T = np.random.randn(M)
+#     #print(W_T)
+#     V_T = V * np.exp( ((0 - 0.5 * sigma**2) * T) + (sigma*np.sqrt(T) * W_T))
 
-    S_T = np.maximum(V_T - K,0)
-    B_T = V_T - S_T
+#     S_T = np.maximum(V_T - K,0)
+#     B_T = V_T - S_T
 
-    Equity_sim_mean = np.mean(S_T)
-    Debt_sim_mean = np.mean(B_T)
+#     Equity_sim_mean = np.mean(S_T)
+#     Debt_sim_mean = np.mean(B_T)
 
+#     defaulted_simulations = np.sum(V_T < K)
+#     print(defaulted_simulations)
+#     prob_default = round((defaulted_simulations / M) * 100, 10)
+
+
+#     return Equity_sim_mean, Debt_sim_mean, prob_default
+
+
+
+def monte_carlo_merton_2(V_0, K, r, sigma, T, M, precision=5):
+    np.random.seed(42)
+    W_T = np.random.randn(M) * np.sqrt(T)
+    V_T = V_0 * np.exp((-0.5 * sigma**2) * T + sigma * W_T)
     defaulted_simulations = np.sum(V_T < K)
-    prob_default = (defaulted_simulations/M)*100
-    
+    print(defaulted_simulations)
+    prob_default = round((defaulted_simulations / M) * 100, 10)
+
+    return defaulted_simulations
 
     return Equity_sim_mean, Debt_sim_mean, prob_default
