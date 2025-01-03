@@ -95,16 +95,44 @@ def credit_spread_model(V, K, sigma, r, T, t):
     return credit_spread
 
 def credit_spread_model_old(V, K, sigma, r, T, t):
-    riskless = np.exp(-r * (T - t))  # Riskless bond price
+    if K!= 0:
+        riskless = np.exp(-r * (T - t))  # Riskless bond price
 
-    # Calculate d1 and d2
-    d1 = (np.log(V / K) + (r + 0.5 * sigma**2) * (T - t)) / (sigma * np.sqrt(T - t))
-    d2 = d1 - sigma * np.sqrt(T - t)
+        # Calculate d1 and d2
+        d1 = (np.log(V / K) + (r + 0.5 * sigma**2) * (T - t)) / (sigma * np.sqrt(T - t))
+        d2 = d1 - sigma * np.sqrt(T - t)
 
-    # Defaultable bond price using Merton's formula
-    defaultable_bond = V * norm.cdf(d1) - K * riskless * norm.cdf(d2)
+        # Defaultable bond price using Merton's formula
+        defaultable_bond = V * norm.cdf(d1) - K * riskless * norm.cdf(d2)
+        print(defaultable_bond / ( K * riskless))
 
-    # Credit spread calculation
-    credit_spread = -1 / (T - t) * np.log(defaultable_bond / (K * riskless))
+        # Credit spread calculation
+        credit_spread = -1 / (T - t) * np.log(defaultable_bond / (K * riskless))
+
+        return credit_spread
+    
+    else: 
+        return 0 
+
+
+def credit_spread_model_new(V, K, sigma, r, T, t):
+    if K != 0:
+        # 1) Riskless bond price (for face value K)
+        p_0 = np.exp(-r * (T - t))
+
+        # 2) Calculate d1 and d2
+        d1 = (-(np.log((K*p_0)/V)) + (0 + 0.5*sigma**2) * (T - t)) / (sigma * np.sqrt(T -t))
+
+        d2 = d1 - (sigma * np.sqrt(T - t))
+
+        # 3) *Defaultable* bond price using Merton's debt formula
+        #defaultable_bond = K * riskless * norm.cdf(d2) + V * (1 - norm.cdf(d1))
+
+        # 4) Credit spread calculation: -1/(T - t) * ln(defaultable_bond / riskless_bond)
+        credit_spread = -1/(T - t) * np.log(norm.cdf(d2) + (V/(K *p_0))*norm.cdf(-d1))
+
+    else: 
+
+        credit_spread = 0
 
     return credit_spread
