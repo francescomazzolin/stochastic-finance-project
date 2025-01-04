@@ -29,3 +29,4 @@ def plot_spread_time(V, K, r, T, t, sigma=0.25, debug=False):
     plt.grid(False)
     plt.legend()
     plt.show()
+
