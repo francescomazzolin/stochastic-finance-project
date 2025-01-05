@@ -30,3 +30,31 @@ def plot_spread_time(V, K, r, T, t, sigma=0.25, debug=False):
     plt.legend()
     plt.show()
 
+def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K):
+   
+    dt = T / N  
+    paths = np.zeros((M, N))  
+    paths[:, 0] = V0  
+    time = np.linspace(0, T, N)
+    for t in range(1, N):
+        
+        z = np.random.standard_normal(M)
+        jump_count = np.random.poisson(lam * dt, M)
+        jump_sizes = np.sum(np.random.normal(m, v, (M, max(jump_count))) * (np.arange(max(jump_count)) < jump_count[:, None]), axis=1)
+        
+        # Geometric Brownian motion + jumps
+        paths[:, t] = paths[:, t - 1] * np.exp((r - 0.5 * sigma ** 2) * dt + sigma * np.sqrt(dt) * z + jump_sizes)
+
+    # Plotting the paths
+    plt.figure(figsize=(10, 6))
+    for i in range(M):
+        plt.plot(np.linspace(0, T, N), paths[i], lw=0.8)
+    plt.axhline(y=K, color='r', linestyle='--', linewidth=2, label='Debt Threshold (D)')
+    plt.fill_between(time,0, K, color='red', alpha=0.2, label='Default Region')
+    plt.title("Merton Jump-Diffusion Model Simulated Paths")
+    plt.xlabel("Time (Years)")
+    plt.ylabel("Asset Value")
+    plt.yscale('log')
+    plt.show()
+
+    return None                                       
