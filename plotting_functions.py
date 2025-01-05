@@ -2,6 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from analytical_functions import credit_spread_model
 
+"""
+This function plots the impact of VOLATILITY on the credit spread according to 
+the Merton's model
+"""
+
 def plot_spread_vol(V, K, r, T, t, debug=False):
     vol_interval = np.linspace(0.01, 0.5, 1000)
     credit_spread_vol = [credit_spread_model(V, K, sigma, r, T, t) for sigma in vol_interval]
@@ -16,6 +21,12 @@ def plot_spread_vol(V, K, r, T, t, debug=False):
     plt.legend()
     plt.show()
 
+
+"""
+This function plots the impact of MATURITY on the credit spread according to 
+the Merton's model
+"""
+
 def plot_spread_time(V, K, r, T, t, sigma=0.25, debug=False):
     time_interval = np.linspace(0.01, 5, 1000)  
     credit_spread_time = [credit_spread_model(V, K, sigma, r, T, t) for T in time_interval]
@@ -29,6 +40,36 @@ def plot_spread_time(V, K, r, T, t, sigma=0.25, debug=False):
     plt.grid(False)
     plt.legend()
     plt.show()
+
+"""
+This function plots the various stochastic processes simulated paths, for a given asset 
+and a given maturity against the threshold below which the Merton's model postulates a default
+"""
+
+def plot_asset_paths_with_default(threshold, asset_paths, time_horizon, num_paths, instrument):
+    
+    time_steps = asset_paths.shape[1]
+    time = np.linspace(0, time_horizon, time_steps)
+
+    plt.figure(figsize=(12, 8))
+    for i in range(num_paths):
+        plt.plot(time, asset_paths[i, :], alpha=0.7, linewidth=1.0)
+
+    # Plot the debt threshold line
+    plt.axhline(y=threshold, color='r', linestyle='--', linewidth=2, label='Debt Threshold (D)')
+
+    # Highlight the default area
+    plt.fill_between(time, 0, threshold, color='red', alpha=0.2, label='Default Region')
+
+    # Customize the plot
+    plt.title(f"Simulated Asset Paths and Default Threshold for {instrument}", fontsize=14)
+    plt.xlabel("Time (Years)", fontsize=12)
+    plt.ylabel("Asset Value", fontsize=12)
+    plt.legend()
+    plt.grid()
+    plt.tight_layout()
+    plt.show()
+
 
 def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K):
    
