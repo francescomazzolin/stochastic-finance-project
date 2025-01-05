@@ -8,7 +8,7 @@ import os
 load_dotenv()
 api_key = os.getenv("EIKON_API_KEY")
 ek.set_app_key(api_key)
-def jump_dev_estimator(rics, threshold,start_date=None, end_date=None):
+def jump_dev_estimator(rics, threshold):
     
     results = [] 
 
@@ -31,13 +31,9 @@ def jump_dev_estimator(rics, threshold,start_date=None, end_date=None):
                    v = 0  # No detected jumps
                 results.append({'RIC':ric, 'Jump_Std_Dev_v': v})
                 
-                print(f"RIC: {ric}")
-                print(f"Mean Returns: {mean_returns:.4f}, Volatility: {volatility:.4f}")
-                print(f"Number of jumps detected: {len(jumps)}")
+                
                 
     data = pd.DataFrame(results)    
             
     return data
 
-
-jump_dev_estimator(['AAPL.O', 'META.O'],2.5 ,start_date=None, end_date=None)

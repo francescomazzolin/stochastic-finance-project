@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
-
+from data_retrieve import get_financial_data
 
 def monte_carlo_merton(V_0, K, r, sigma, T, M):
     
@@ -20,7 +20,6 @@ def monte_carlo_merton(V_0, K, r, sigma, T, M):
     
 
     return Equity_sim_mean, Debt_sim_mean, prob_default
-
 
 def merton_jumps_default(V0, K, T, M, N, lam, m, v, r, sigma):
    
@@ -46,7 +45,7 @@ def merton_jumps_default(V0, K, T, M, N, lam, m, v, r, sigma):
     
     defaulted_paths = np.any(paths < K, axis=1)
     print(f"Number of default paths: {np.sum(defaulted_paths)}")
-    prob_default = (np.sum(defaulted_paths) / M) * 100  
+    prob_default = (np.sum(defaulted_paths) / M) 
 
     Equity_mean = np.mean(S_T)
     Debt_mean = np.mean(B_T)
