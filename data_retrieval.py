@@ -63,15 +63,6 @@ def get_financial_data(rics, fields,
 
 
 
-
-
-
-
-
-
-
-
-
 def single_company_bond_data(ric, fields_2, start_date):
     # Retrieve the bond data
         fields_1 = ['TR.BondISIN']
