@@ -46,10 +46,27 @@ This function plots the various stochastic processes simulated paths, for a give
 and a given maturity against the threshold below which the Merton's model postulates a default
 """
 
-def plot_asset_paths_with_default(threshold, asset_paths, time_horizon, num_paths, instrument):
+def plot_asset_paths_with_default(threshold, asset_paths, time_horizon, instrument, log = False):
     
+    print(f"Min asset: {np.min(asset_paths[:, -1])}")
+    print(f"Max asset: {np.max(asset_paths[:, -1])}")
+    
+    if log:
+        
+        threshold = np.log(threshold)
+
+    print(f'With threshold: {threshold}')
+
+    #Design variables
+
+    final_values = asset_paths[:,-1]
+
+    rng = max(final_values) - min(final_values)
+
     time_steps = asset_paths.shape[1]
     time = np.linspace(0, time_horizon, time_steps)
+
+    num_paths = asset_paths.shape[0]
 
     plt.figure(figsize=(12, 8))
     for i in range(num_paths):
@@ -59,13 +76,13 @@ def plot_asset_paths_with_default(threshold, asset_paths, time_horizon, num_path
     plt.axhline(y=threshold, color='r', linestyle='--', linewidth=2, label='Debt Threshold (D)')
 
     # Highlight the default area
-    plt.fill_between(time, 0, threshold, color='red', alpha=0.2, label='Default Region')
+    plt.fill_between(time, threshold - rng, threshold, color='red', alpha=0.2, label='Default Region')
 
     # Customize the plot
     plt.title(f"Simulated Asset Paths and Default Threshold for {instrument}", fontsize=14)
     plt.xlabel("Time (Years)", fontsize=12)
     plt.ylabel("Asset Value", fontsize=12)
-    plt.legend()
+    #plt.legend()
     plt.grid()
     plt.tight_layout()
     plt.show()

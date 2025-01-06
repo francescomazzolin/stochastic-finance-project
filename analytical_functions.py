@@ -144,7 +144,7 @@ This function returns the simulated paths of Random Walks processes that were us
 for the purposes of Monte Carlo approximation of the probability of default. 
 """
 
-def monte_carlo_simulation_paths(V0, sigma, r, T, M, N):
+def monte_carlo_simulation_paths(V0, sigma, r, T, M, N, K, log = False):
     """
     Generate Monte Carlo simulated asset paths using geometric Brownian motion.
 
@@ -161,10 +161,31 @@ def monte_carlo_simulation_paths(V0, sigma, r, T, M, N):
     """
     dt = T / N
     paths = np.zeros((M, N))
-    paths[:, 0] = V0
-    for t in range(1, N):
-        z = np.random.standard_normal(M)
-        paths[:, t] = paths[:, t - 1] * np.exp((r - 0.5 * sigma ** 2) * dt + sigma * np.sqrt(dt) * z)
+    if log:
+        paths[:, 0] = np.log(V0)
+
+        for t in range(1, N):
+            z = np.random.standard_normal(M)
+            paths[:, t] = paths[:, t - 1] + ((0 - 0.5 * sigma ** 2) * dt) + (sigma * np.sqrt(dt) * z)    
+
+            defaults = np.sum(np.array(paths[:,-1] < np.log(K)))
+        print(f"\nMin log(V_T) - Paths: {np.min(paths[:,-1])}, Max log(V_T) - Paths: {np.max(paths[:,-1])}, Threshold - Paths: {np.log(K)}")
+        print(f'\n\nThe defaults of the monte carlo paths is {defaults}')
+        print(f'For threshold: {np.log(K)}\n')
+
+    else:
+
+        paths[:, 0] = V0
+
+        for t in range(1, N):
+            z = np.random.standard_normal(M)
+            paths[:, t] = paths[:, t - 1] * np.exp( ((0 - 0.5 * sigma ** 2) * dt) + (sigma * np.sqrt(dt) * z) )    
+
+            defaults = np.sum(np.array(paths[:,-1] < K))
+        print(f"\nMin V_T - Paths: {np.min(paths[:,-1])}, Max V_T - Paths: {np.max(paths[:,-1])}, Threshold - Paths: {K}")
+        print(f'\n\nThe defaults of the monte carlo paths is {defaults}')
+        print(f'For threshold: {np.log(K)}\n')
+
     return paths
 
 

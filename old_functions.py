@@ -123,3 +123,92 @@ def monte_carlo_path_batched(V_0, K, r, sigma, T, M, steps, batch_size):
     
 #     else: 
 #         return 0 
+
+
+
+"""
+SINGLE PLOTTING FUNCTIONS
+"""
+
+# for ric in rics_list:
+#     row_cross = data_cross[data_cross['Instrument'] == ric]
+
+#     sector = row_cross['NAICS Sector Name'].iloc[0]
+#     cluster = row_cross['ranked_clusters'].iloc[0]
+
+#     plt.figure(figsize=(20, 6))  # Adjust figure size for better visualization
+
+#     # Extract data
+#     def_probab = df_final.loc[ric]['Default_Probability']
+#     leverage_ratio = df_final.loc[ric]['Leverage_Ratio']
+
+#     # Create the main axis
+#     fig, ax1 = plt.subplots()
+
+#     # Plot Default Probability on the primary y-axis
+#     color1 = 'tab:blue'
+#     ax1.plot(def_probab, color=color1, label='Leverage Ratio', linewidth=2)
+#     ax1.set_ylabel('Default Probability', color=color1, fontsize=12)
+#     ax1.tick_params(axis='y', labelcolor=color1)
+#     ax1.set_xlabel('Date', fontsize=12)
+#     ax1.grid(True, linestyle='--', alpha=0.5)
+
+#     # Create a secondary y-axis
+#     ax2 = ax1.twinx()
+#     color2 = 'tab:red'
+#     ax2.plot(leverage_ratio, color=color2, label='Leverage Ratio', linewidth=2, linestyle='dashed')
+#     ax2.set_ylabel('Leverage Ratio', color=color2, fontsize=12)
+#     ax2.tick_params(axis='y', labelcolor=color2)
+
+#     # Add title and legend
+#     plt.suptitle(f'{rics_dict[ric]}', fontsize=14, fontweight='bold')  # Move suptitle closer to the plot
+#     plt.title(f"Sector: {sector} | EOP 2024 In-sample leverage level: {cluster_dict[cluster]}", fontsize=10, fontstyle='italic')  # Move subtitle closer to suptitle
+
+#     fig.tight_layout(rect=[1, 1, 0.9, 0.88])  # Adjust layout to make more space for the plot
+#     ax1.legend(loc='upper left')
+#     ax2.legend(loc='upper right')
+
+#     # Show the plot
+#     plt.show()
+
+
+# for ric in rics_list:
+#     row_cross = data_cross[data_cross['Instrument'] == ric]
+
+#     sector = row_cross['NAICS Sector Name'].iloc[0]
+#     cluster = row_cross['ranked_clusters'].iloc[0]
+
+#     plt.figure(figsize=(20, 6))  # Adjust figure size for better visualization
+
+#     # Extract data
+#     def_probab = df_final.loc[ric]['Default_Probability']
+#     leverage_ratio = df_final.loc[ric]['Rolling_Volatility']
+
+#     # Create the main axis
+#     fig, ax1 = plt.subplots()
+
+#     # Plot Default Probability on the primary y-axis
+#     color1 = 'tab:blue'
+#     ax1.plot(def_probab, color=color1, label='Default Probability', linewidth=2)
+#     ax1.set_ylabel('Default Probability', color=color1, fontsize=12)
+#     ax1.tick_params(axis='y', labelcolor=color1)
+#     ax1.set_xlabel('Date', fontsize=12)
+#     ax1.grid(True, linestyle='--', alpha=0.5)
+
+#     # Create a secondary y-axis
+#     ax2 = ax1.twinx()
+#     color2 = 'tab:green'
+#     ax2.plot(leverage_ratio, color=color2, label='Volatility', linewidth=2, linestyle='dashed')
+#     ax2.set_ylabel('Volatility', color=color2, fontsize=12)
+#     ax2.tick_params(axis='y', labelcolor=color2)
+
+#     # Add title and legend
+#     plt.suptitle(f'{rics_dict[ric]}', fontsize=14, fontweight='bold')  # Move suptitle closer to the plot
+#     plt.title(f"Sector: {sector} | EOP 2024 In-sample leverage level: {cluster_dict[cluster]}", fontsize=10, fontstyle='italic')  # Move subtitle closer to suptitle
+
+#     fig.tight_layout(rect=[1, 1, 0.9, 0.88])  # Adjust layout to make more space for the plot
+#     ax1.legend(loc='upper left')
+#     ax2.legend(loc='upper right')
+
+#     # Show the plot
+#     plt.show()
