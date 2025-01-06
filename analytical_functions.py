@@ -62,10 +62,14 @@ def default_probability(V, B, r, sigma, T, t, precision = 20):
     getcontext().prec = precision
     
     if B != 0:
-        V_d = Decimal(V)
-        B_d = Decimal(B)
-        r_d = Decimal(r)
-        sigma_d = Decimal(sigma)
+        # V_d = Decimal(V)
+        # B_d = Decimal(B)
+        # r_d = Decimal(r)
+        # sigma_d = Decimal(sigma)
+        V_d = Decimal(float(V))
+        B_d = Decimal(float(B))
+        r_d = Decimal(float(r))
+        sigma_d = Decimal(float(sigma))
         T_d = Decimal(T)
         #t = Decimal(t)
         arg = ( np.log(float(B_d/V_d)) - float(0 - Decimal('0.5') *sigma_d**2) ) / float(sigma_d*np.sqrt(T_d-t))
@@ -90,10 +94,15 @@ There are commments that can be activated for the purposes of debugging the resu
 
 def monte_carlo_merton_anti(V_0, K, r, sigma, T, M):
 
-    V_d = Decimal(V_0)
-    K_d = Decimal(K)
-    r_d = Decimal(r)
-    sigma_d = Decimal(sigma)
+    # V_d = Decimal(V_0)
+    # K_d = Decimal(K)
+    # r_d = Decimal(r)
+    # sigma_d = Decimal(sigma)
+    
+    V_d = Decimal(float(V_0))
+    K_d = Decimal(float(K))
+    r_d = Decimal(float(r))
+    sigma_d = Decimal(float(sigma))
     T_d = Decimal(T)
     t_d = Decimal(0)
 
