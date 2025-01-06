@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 from decimal import Decimal, getcontext
+import pandas as pd
 
 """'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 FUNCTION TO COMPUTE THE EQUITY VALUE BASED ON MERTON
@@ -215,4 +216,134 @@ def credit_spread_model(V, K, sigma, r, T, t):
         credit_spread = 0
 
     return credit_spread
+
+"""
+FUNCTION FOR JUMP PROCESS EXTENSION
+"""
+
+def jump_dev_estimator(rics, threshold, data):
+    
+    results = [] 
+
+    for ric in rics:
+        
+        
+        data_ric = data.loc[ric]
+        mean_returns = np.mean(data['Log_Returns'])
+        volatility = np.std(data_ric['Log_Returns'])
+        jumps = data_ric[(data_ric['Log_Returns'] - mean_returns).abs() >  threshold * volatility]
+        if not jumps.empty:
+            v = jumps['Log_Returns'].std()  # Standard deviation of detected jumps
+        else:
+            v = 0  # No detected jumps
+        results.append({'RIC':ric, 'Jump_Std_Dev_v': v})
+        
+                
+                
+    df_result = pd.DataFrame(results)    
+            
+    return df_result
+
+
+def merton_jumps_default(V0, K, T, M, N, lam, m, v, r, sigma):
+   
+    dt = T / N  
+    paths = np.zeros((M, N))  
+    paths[:, 0] = V0  
+
+    for t in range(1, N):
+        z = np.random.standard_normal(M)  
+        jump_counts = np.random.poisson(lam * dt, M)  
+        jump_sizes = np.random.normal(m, v, M) 
+        
+        
+        paths[:, t] = paths[:, t - 1] * np.exp(
+            (r - 0.5 * sigma ** 2) * dt + sigma * np.sqrt(dt) * z
+        ) * np.exp(jump_counts * jump_sizes)
+
+   
+    V_T = paths[:, -1]  
+    S_T = np.maximum(V_T - K, 0)  
+    B_T = V_T - S_T  
+
+    
+    defaulted_paths = np.any(paths < K, axis=1)
+    print(f"Number of default paths: {np.sum(defaulted_paths)}")
+    prob_default = (np.sum(defaulted_paths) / M) 
+
+    Equity_mean = np.mean(S_T)
+    Debt_mean = np.mean(B_T)
+
+    return Equity_mean, Debt_mean, prob_default
+
+
+
+import numpy as np
+
+def merton_jumps_vectorized(V0, K, T, M, N, lam, m, v, r, sigma):
+    """
+    Simulates a jump diffusion process using a fully vectorized approach.
+
+    Parameters:
+        V0 : float
+            Initial value of the asset
+        K : float
+            Strike price or threshold value
+        T : float
+            Time to maturity
+        M : int
+            Number of simulated paths
+        N : int
+            Number of time steps
+        lam : float
+            Jump intensity (expected number of jumps per unit time)
+        m : float
+            Mean of jump sizes
+        v : float
+            Standard deviation of jump sizes
+        r : float
+            Risk-free rate
+        sigma : float
+            Volatility of the diffusion process
+
+    Returns:
+        Equity_mean : float
+            Mean equity value at maturity
+        Debt_mean : float
+            Mean debt value at maturity
+        prob_default : float
+            Probability of default (asset value falling below K at any time)
+    """
+    dt = T / N
+    drift = (r - 0.5 * sigma ** 2) * dt
+    diffusion_std = sigma * np.sqrt(dt)
+    
+    # Generate random numbers for the diffusion and jump processes
+    z = np.random.standard_normal((M, N))  # Diffusion terms
+    jump_counts = np.random.poisson(lam * dt, (M, N))  # Number of jumps at each step
+    jump_sizes = np.random.normal(m, v, (M, N))  # Jump sizes
+
+    # Compute log increments for the process
+    log_increments = drift + diffusion_std * z + jump_counts * jump_sizes
+
+    # Compute cumulative sum of log increments
+    log_paths = np.cumsum(log_increments, axis=1) + np.log(V0)
+
+    # Convert log paths back to asset prices
+    paths = np.exp(log_paths)
+
+    # Extract terminal values
+    V_T = paths[:, -1]
+    S_T = np.maximum(V_T - K, 0)
+    B_T = V_T - S_T
+
+    # Probability of default
+    defaulted_paths = np.any(paths < K, axis=1)
+    prob_default = np.mean(defaulted_paths)
+
+    # Mean equity and debt values
+    Equity_mean = np.mean(S_T)
+    Debt_mean = np.mean(B_T)
+
+    return Equity_mean, Debt_mean, prob_default
 
