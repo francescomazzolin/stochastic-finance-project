@@ -91,6 +91,7 @@ def single_company_bond_data(ric, fields_2, start_date):
             df, err = ek.get_data(bond_l, fields_2, {'SDate': f'{start_date}'})
 
             df['RIC'] = ric
+
             return df
 
         except:
