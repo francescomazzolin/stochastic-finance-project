@@ -236,20 +236,30 @@ def jump_dev_estimator(rics, threshold, data):
     
     results = [] 
 
+    start_date = pd.to_datetime('2018-12-30')
+    end_date = pd.to_datetime('2024-12-30')
+    
+    # Calculate the number of years in the period
+    num_years = (end_date - start_date).days / 365.25
+
     for ric in rics:
-        
         
         data_ric = data.loc[ric]
         mean_returns = np.mean(data['Log_Returns'])
         volatility = np.std(data_ric['Log_Returns'])
         jumps = data_ric[(data_ric['Log_Returns'] - mean_returns).abs() >  threshold * volatility]
+        num_jumps = len(jumps)
+
+        # Annualized jump intensity
+        lam = num_jumps / num_years
         if not jumps.empty:
             v = jumps['Log_Returns'].std()  # Standard deviation of detected jumps
             m = jumps['Log_Returns'].mean()
         else:
             v = 0  # No detected jumps
+            m = 0
 
-        results.append({'RIC':ric, 'Jump_Std_Dev_v': v, 'Jump_Mean_v' : m})
+        results.append({'RIC':ric, 'Jump_Std_Dev_v': v, 'Jump_Mean_v' : m, 'lambda' : lam})
         
                 
                 
