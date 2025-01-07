@@ -14,7 +14,7 @@ def plot_spread_vol(V, K, r, T, t, debug=False):
 
     plt.figure(figsize=(12, 6))
     plt.plot(vol_interval, credit_spread_vol_percentage, label='Credit Spread')
-    plt.xlabel('Volatility (σ)')
+    plt.xlabel('Volatility (σ)')  
     plt.ylabel('Credit Spread (%)')  
     plt.title('Theoretical Impact of Volatility on Credit Spread')
     plt.grid(False)
@@ -88,7 +88,7 @@ def plot_asset_paths_with_default(threshold, asset_paths, time_horizon, instrume
     plt.show()
 
 
-def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K):
+def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K, instrument):
    
     dt = T / N  
     paths = np.zeros((M, N))  
@@ -109,10 +109,9 @@ def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K):
         plt.plot(np.linspace(0, T, N), paths[i], lw=0.8)
     plt.axhline(y=K, color='r', linestyle='--', linewidth=2, label='Debt Threshold (D)')
     plt.fill_between(time,0, K, color='red', alpha=0.2, label='Default Region')
-    plt.title("Merton Jump-Diffusion Model Simulated Paths")
+    plt.title(f"Merton Jump-Diffusion Model Simulated Paths for {instrument}", fontsize = 14)
     plt.xlabel("Time (Years)")
     plt.ylabel("Asset Value")
-    plt.yscale('log')
     plt.show()
 
     return None                                       
