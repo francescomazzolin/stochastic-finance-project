@@ -325,7 +325,7 @@ def merton_jumps_default_with_bc(V0, K, T, M, N, lam, m, v, r, sigma):
 
     
     bc_defaulted_paths = np.any(paths < K, axis=1)
-    print(f"Number of default paths bc: {np.sum(bc_defaulted_paths)}")
+    #print(f"Number of default paths bc: {np.sum(bc_defaulted_paths)}")
     bc_prob_default = (np.sum(bc_defaulted_paths) / M) 
 
     Equity_mean = np.mean(S_T)
