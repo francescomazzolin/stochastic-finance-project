@@ -50,6 +50,7 @@ def risk_neutral_default_probability(V, B, r, sigma, T, t, precision = 20):
         return float(norm.cdf(-d2))
     
     else:
+
         return 0
 
 """
@@ -155,6 +156,7 @@ for the purposes of Monte Carlo approximation of the probability of default.
 """
 
 def monte_carlo_simulation_paths(V0, sigma, r, T, M, N, K, log = False):
+    
     """
     Generate Monte Carlo simulated asset paths using geometric Brownian motion.
 
