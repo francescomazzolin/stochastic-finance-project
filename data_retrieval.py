@@ -1,6 +1,7 @@
 import pandas as pd 
 import eikon as ek 
 import numpy as np
+
 #Setting up the function
 
 
