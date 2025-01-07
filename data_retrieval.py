@@ -1,6 +1,7 @@
 import pandas as pd 
 import eikon as ek 
 import numpy as np
+
 #Setting up the function
 
 
@@ -17,6 +18,7 @@ def get_financial_data(rics, fields,
     df = pd.DataFrame()
 
     for ric in rics:
+        #print(ric)
         data, err = ek.get_data([ric], fields,
                                 {'SDate': f'{start_date}' , 'EDate': f'{end_date}', 'FRQ':'D','period':'FY0'}) #Not sure about period
         if err is None:
