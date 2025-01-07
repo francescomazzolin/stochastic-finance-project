@@ -245,9 +245,11 @@ def jump_dev_estimator(rics, threshold, data):
         jumps = data_ric[(data_ric['Log_Returns'] - mean_returns).abs() >  threshold * volatility]
         if not jumps.empty:
             v = jumps['Log_Returns'].std()  # Standard deviation of detected jumps
+            m = jumps['Log_Returns'].mean()
         else:
             v = 0  # No detected jumps
-        results.append({'RIC':ric, 'Jump_Std_Dev_v': v})
+
+        results.append({'RIC':ric, 'Jump_Std_Dev_v': v, 'Jump_Mean_v' : m})
         
                 
                 
