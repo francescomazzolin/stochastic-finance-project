@@ -13,7 +13,7 @@ def plot_spread_vol(V, K, r, T, t, debug=False):
     credit_spread_vol_percentage = [cs * 100 for cs in credit_spread_vol]
 
     plt.figure(figsize=(12, 6))
-    plt.plot(vol_interval, credit_spread_vol_percentage, label='Credit Spread')
+    plt.plot(vol_interval, credit_spread_vol_percentage, label='Credit Spread', color = '#0203e2')
     plt.xlabel('Volatility (σ)')  
     plt.ylabel('Credit Spread (%)')  
     plt.title('Theoretical Impact of Volatility on Credit Spread')
@@ -33,7 +33,7 @@ def plot_spread_time(V, K, r, T, t, sigma=0.25, debug=False):
     credit_spread_time_percentage = [cs * 100 for cs in credit_spread_time]
 
     plt.figure(figsize=(12, 6))
-    plt.plot(time_interval, credit_spread_time_percentage, label='Credit Spread')
+    plt.plot(time_interval, credit_spread_time_percentage, label='Credit Spread', color = '#0203e2')
     plt.xlabel("Time to Maturity (T)")
     plt.ylabel("Credit Spread (%)") 
     plt.title("Theoretical Impact of Maturity on Credit Spread")
@@ -105,8 +105,10 @@ def merton_jumps_plot(V0, sigma, r, T, M, N, lam, m, v, K, instrument):
 
     # Plotting the paths
     plt.figure(figsize=(10, 6))
+
     for i in range(M):
         plt.plot(np.linspace(0, T, N), paths[i], lw=0.8)
+        
     plt.axhline(y=K, color='r', linestyle='--', linewidth=2, label='Debt Threshold (D)')
     plt.fill_between(time,0, K, color='red', alpha=0.2, label='Default Region')
     plt.title(f"Merton Jump-Diffusion Model Simulated Paths for {instrument}", fontsize = 14)
