@@ -1,5 +1,41 @@
 import numpy as np 
+##---------------------------------------- Debugging the credit spread
 
+# This part is meant to check intem
+r = 0.04
+T = 1
+t = 0
+
+sigma = 0.25
+
+
+V = 3837473534.932722
+#K = 931124000.0 * 2
+
+
+p_0 = np.exp(-r * (T - t))
+K = (V * 0.6) / p_0
+
+# 2) Calculate d1 and d2
+d1 = (-(np.log((K*p_0)/V)) + (0 + 0.5*sigma**2) * (T - t)) / (sigma * np.sqrt(T -t))
+
+d2 = d1 - (sigma * np.sqrt(T - t))
+
+# 3) *Defaultable* bond price using Merton's debt formula
+#defaultable_bond = K * riskless * norm.cdf(d2) + V * (1 - norm.cdf(d1))
+
+# 4) Credit spread calculation: -1/(T - t) * ln(defaultable_bond / riskless_bond)
+credit_spread = -1/(T - t) * np.log(norm.cdf(d2) + (V/(K *p_0))*norm.cdf(-d1))
+
+print(f'Debt-to-value: {K/V}')
+print(f'Log: {-(np.log((K*p_0)/V))}')
+print(f'Numerator: {(-(np.log((K*p_0)/V)) + (0 + 0.5*sigma**2) * (T - t))}')
+print(f'Volatility: {sigma}')
+print(f'd1: {d1}')
+print(f'First addend: {np.log(norm.cdf(d2) )}' )
+print(f'Second addend: {(V/(K *p_0))*norm.cdf(-d1)}')
+print(f'Not discounted: {-np.log(norm.cdf(d2) + (V/(K *p_0))*norm.cdf(-d1))}')
+print(f'Credit spread: {credit_spread}')
 
 def credit_spread_model_2(V, K, sigma, r, T, t):
     if K != 0:
